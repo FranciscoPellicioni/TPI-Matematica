@@ -97,6 +97,10 @@ def menu():
     print("7. Verificar usuarios criticos")
     print("8. Salir del progama")
 
+def guardar_error(mensaje):
+    archivo = open("trazas.txt", "a")
+    archivo.write(mensaje + "\n")
+    archivo.close()
 
 def definicion(): #Definir vectores y llamar funciones
 
@@ -113,9 +117,15 @@ def definicion(): #Definir vectores y llamar funciones
     criticos = []
     no_criticos = []
     opcion = 0
+   
     while opcion != 8:
         menu()
-        opcion = int(input("Ingrese una opcion: "))
+        try:
+            opcion = int(input("Ingrese una opcion: "))
+        except ValueError:
+            print("ERROR, debe ingresar un numero")
+            guardar_error("Error: No se ingreso un numero en el menu")
+            continue
         if opcion == 1:
             inter(vec1,vec2,interseccion)
         elif opcion == 2:
@@ -134,10 +144,7 @@ def definicion(): #Definir vectores y llamar funciones
             print("Saliendo del sistema...")
         else:
             print("Opcion invalida")
-
-
+            guardar_error("Error: No se ingreso una opcion valida")
+        
 definicion()
-
-
-
 
