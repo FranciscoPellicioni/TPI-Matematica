@@ -1,43 +1,70 @@
+from datetime import datetime
+def guardar_error(mensaje):
+    archivo = open("C:/desarrolo/traza.txt", "a")
+    archivo.writelines(mensaje + datetime.now().strftime(f"%d/%m/%Y %H:%M:%S") + "\n")
+    archivo.close()
 def menumatriz():
-    matriz=[]
+    matriz = []
     funciones = 0
     servidores = 0 
-    resultado= True
-    while resultado:
-        print("----menu de matrices-----")
+    resultado = True
+    while resultado:  # Un solo bucle controla todo el menú
+        print("\n----menu de matrices-----")
         print("1- registrar cantidad de filas(funciones) y columnas de la matriz(servidores)")
         print("2- llena la matriz elemento por elemento")
         print("3- tiempo promedio de ejecucion por funcion")
         print("4- tiempo promedio de ejecucion por servidor")
         print("5- visualizar la matriz transpuesta")
-        print("6-volver al menu principal")
-        choice = int(input("Ingrese la opción (1, 2, 3, 4): "))
-        if choice==1:
-            servidores,funciones=inicializar(matriz,funciones,servidores)
-        if choice==2:
-            cargamat(matriz,funciones,servidores)
-        if choice==3:
-            promedioejecucion(matriz,funciones,servidores)
-        if choice==4:
-            promedioservidor(matriz,funciones,servidores)
-        if choice==5:
-            mostratranspuesta(matriz)
-        if choice==6:
-            resultado=False
+        print("6- volver al menu principal")
+        try:
+            choice = int(input("Ingrese la opción (1, 2, 3, 4, 5, 6): "))
+            if choice == 1:
+                servidores, funciones = inicializar(matriz, funciones, servidores)
+            elif choice == 2:
+                cargamat(matriz, funciones, servidores)
+            elif choice == 3:
+                promedioejecucion(matriz, funciones, servidores)
+            elif choice == 4:
+                promedioservidor(matriz, funciones, servidores)
+            elif choice == 5:
+                mostratranspuesta(matriz)
+            elif choice == 6:
+                resultado = False 
+            else:
+                print("ERROR: Opción fuera de rango (debe ser de 1 a 6).")
+        except ValueError:
+            print("ERROR: Debe ingresar un número entero válido (1 al 6).")
+            guardar_error("ERROR: Debe ingresar un número en el menú matrices")
 def inicializar(matriz,funciones,servidores):
-    funciones = int(input("Ingrese la cantidad de funciones: "))
-    servidores = int(input("Ingrese la cantidad de servidores: "))
+    resultado = True
+    while resultado:
+        try:
+            funciones = int(input("Ingrese la cantidad de funciones: "))
+            servidores = int(input("Ingrese la cantidad de servidores: "))
+            break
+        except ValueError:
+            print("ERROR: debe ingresar numero")
+            guardar_error("Error: fila o columna no numerica")
+            return funciones,servidores
     for i in range(funciones):
         matriz.append([0] * servidores)
     print("Matriz inicial:")
     mostramat(matriz)
     return servidores,funciones
-def cargamat(matriz, servidores, funciones):
+def cargamat(matriz,funciones,servidores):
     for i in range(funciones):
         for j in range(servidores):
-            matriz[i][j] = int(input("Ingrese el elemento %d,%d: " % (i, j)))
-            print("Matriz actualizada:")
-            mostramat(matriz)    
+            resultado = True
+            while resultado:
+                try:
+                    matriz[i][j] = int(input("Ingrese el elemento %d,%d: " % (i, j)))
+                    print("Matriz actualizada:")
+                    mostramat(matriz)
+                    break
+                except ValueError:
+                    print("ERROR: debe ingresar un numero")
+                    guardar_error("ERROR INGRESO MATRIZ: elemento no numerico")
+
 def promedioejecucion(matriz, funciones, servidores):
     print("Matriz final:")
     mostramat(matriz)
@@ -206,17 +233,23 @@ def definicion(): #Definir vectores y llamar funciones
 def menugeneral():
     resultado = True
     while resultado:
-        print("------menu principal------")
-        print("1- Unidad conjuntos")
-        print("2- Unidad matrices")
-        print("3-salir del sistema")
-        choicee=int(input("ingrese al menu que desea acceder:(1 o 2)"))
-        if choicee==1:
-            definicion()
-        elif choicee==2:
-            menumatriz()
-        elif choicee==3:
-            print("ejecucion terminada con exito")
-            resultado=False
+        try:
+            print("------menu principal------")
+            print("1- Unidad conjuntos")
+            print("2- Unidad matrices")
+            print("3-salir del sistema")
+            choicee=int(input("ingrese al menu que desea acceder:(1 o 2)"))
+            if choicee==1:
+                definicion()
+            elif choicee==2:
+                menumatriz()
+            elif choicee==3:
+                print("ejecucion terminada con exito")
+                resultado=False
+            else:
+                print("numero fuera de rango (1-2-3)")
+        except ValueError:
+            print("ERROR: debe ingresar un dato numerico")
+            guardar_error("ERROR:ELEMENTO NO NUMERICO EN EL MENU PRINCIPAL")
 if __name__ == "__main__":
     menugeneral()
